@@ -35,7 +35,7 @@ from ..util import transfer_ism_buffer
 from ..util import logging
 logger = logging.get_logger(__name__)
 
-FFTW_WISDOM = os.path.expanduser('~/fftw_wisdom')
+FFTW_WISDOM = '/usr/local/scope/fftw_wisdom'
 if os.path.exists(FFTW_WISDOM):
     fast_fft.load_plan_hints(FFTW_WISDOM)
     logger.debug('FFTW wisdom loaded')
