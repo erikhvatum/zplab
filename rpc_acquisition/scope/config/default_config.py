@@ -12,7 +12,6 @@ scope_configuration = dict(
     Stand = dict(
         SERIAL_PORT = '/dev/ttyScope',
         SERIAL_BAUD = 115200,
-        INITIALIZE_ALL_OBJECTIVE_LAMP_INTENSITIES_TO_MAXIMUM = True
     ),
 
     Camera = dict(
@@ -40,6 +39,35 @@ scope_configuration = dict(
         TL_ENABLE_PIN = 'E6',
         TL_PWM_PIN = 'D7',
         TL_PWM_MAX = 255,
+
+        TL_TIMING = dict(
+            on_latency_ms = 0.025, # Time from trigger signal to start of rise
+            rise_ms = 0.06, # Time from start of rise to end of rise
+            off_latency_ms = 0.06, # Time from end of trigger to start of fall
+            fall_ms = 0.013 # Time from start of fall to end of fall
+        ),
+
+        # SPX timings: depends *strongly* on how recently the last time the 
+        # lamp was turned on was. 100 ms ago vs. 10 sec ago changes the on-latency
+        # by as much as 100 us.
+        # Some lamps have different rise times vs. latencies.
+        # All lamps have ~6 us off latency and 9-13 us fall.
+        # With 100 ms delay between off and on:
+        # Lamp    On-Latency  Rise    Off-Latency  Fall
+        # Red     90 us       16 us   6 us         11 us
+        # Green   83          19      10           13
+        # Cyan    96          11      6            9
+        # UV      98          11      6            11
+        #
+        # With 5 sec delay, cyan and green on-latency goes to 123 usec. 
+        # With 20 sec delay, it is at 130 us. 
+        # Plug in sort-of average values below, assuming 5 sec delay:
+        SPECTRA_X_TIMING = dict(
+            on_latency_ms = .120, # Time from trigger signal to start of rise
+            rise_ms = .015, # Time from start of rise to end of rise
+            off_latency_ms = 0.08, # Time from end of trigger to start of fall
+            fall_ms = .010 # Time from start of fall to end of fall
+        ),
 
         FOOTPEDAL_PIN = 'B4',
         FOOTPEDAL_CLOSED_TTL_STATE = False,
